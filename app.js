@@ -28,6 +28,8 @@ class Calculator {
       this.backspace();
     } else if (button.classList.contains('btn-equals')) {
       this.calculate();
+    } else if (button.classList.contains('btn-function')) {
+      this.handleFunction(value);
     }
   }
 
@@ -96,12 +98,69 @@ class Calculator {
         return;
     }
 
-    this.currentValue = result.toString();
+    this.currentValue = this.formatResult(result);
     this.previousValue = '';
     this.operator = null;
     this.shouldResetDisplay = true;
 
     this.updateDisplay();
+  }
+
+  handleFunction(func) {
+    const current = parseFloat(this.currentValue);
+
+    if (isNaN(current)) {
+      return;
+    }
+
+    let result;
+
+    switch (func) {
+      case '±':
+        result = -current;
+        break;
+      case '%':
+        result = current / 100;
+        break;
+      case '√':
+        if (current < 0) {
+          this.display.textContent = 'Error';
+          this.clear();
+          return;
+        }
+        result = Math.sqrt(current);
+        break;
+      case 'x²':
+        result = current * current;
+        break;
+      case 'x³':
+        result = current * current * current;
+        break;
+      case '1/x':
+        if (current === 0) {
+          this.display.textContent = 'Error';
+          this.clear();
+          return;
+        }
+        result = 1 / current;
+        break;
+      default:
+        return;
+    }
+
+    this.currentValue = this.formatResult(result);
+    this.shouldResetDisplay = true;
+    this.updateDisplay();
+  }
+
+  formatResult(result) {
+    if (result === Infinity || result === -Infinity) {
+      return 'Error';
+    }
+    if (Number.isInteger(result)) {
+      return result.toString();
+    }
+    return result.toFixed(10).replace(/\.?0+$/, '');
   }
 
   clear() {
