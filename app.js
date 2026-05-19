@@ -94,6 +94,14 @@ class Calculator {
         }
         result = prev / current;
         break;
+      case 'xʸ':
+        if (prev === 0 && current <= 0) {
+          this.display.textContent = 'Error';
+          this.clear();
+          return;
+        }
+        result = Math.pow(prev, current);
+        break;
       default:
         return;
     }
@@ -108,6 +116,13 @@ class Calculator {
 
   handleFunction(func) {
     const current = parseFloat(this.currentValue);
+
+    if (func === 'π') {
+      this.currentValue = Math.PI.toString();
+      this.shouldResetDisplay = true;
+      this.updateDisplay();
+      return;
+    }
 
     if (isNaN(current)) {
       return;
@@ -144,6 +159,45 @@ class Calculator {
         }
         result = 1 / current;
         break;
+      case 'sin':
+        result = Math.sin(current * Math.PI / 180);
+        break;
+      case 'cos':
+        result = Math.cos(current * Math.PI / 180);
+        break;
+      case 'tan':
+        if (Math.abs(current % 180) === 90) {
+          this.display.textContent = 'Error';
+          this.clear();
+          return;
+        }
+        result = Math.tan(current * Math.PI / 180);
+        break;
+      case 'log':
+        if (current <= 0) {
+          this.display.textContent = 'Error';
+          this.clear();
+          return;
+        }
+        result = Math.log10(current);
+        break;
+      case 'ln':
+        if (current <= 0) {
+          this.display.textContent = 'Error';
+          this.clear();
+          return;
+        }
+        result = Math.log(current);
+        break;
+      case 'eˣ':
+        result = Math.exp(current);
+        break;
+      case 'xʸ':
+        this.previousValue = this.currentValue;
+        this.currentValue = '0';
+        this.operator = 'xʸ';
+        this.shouldResetDisplay = false;
+        return;
       default:
         return;
     }
