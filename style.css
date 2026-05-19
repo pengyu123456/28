@@ -114,7 +114,6 @@ body {
 .btn-equals {
   background: linear-gradient(135deg, #00d9ff 0%, #0099ff 100%);
   color: white;
-  height: 130px;
 }
 
 .btn-equals:hover {
